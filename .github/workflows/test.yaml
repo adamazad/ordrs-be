@@ -1,0 +1,16 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: npm install
+      - name: Run tests
+        run: npm test
+        env:
+          SERVER_PROTOCOL: http
+          SERVER_HOST: localhost
+          SERVER_PORT: 4002
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
