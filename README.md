@@ -108,6 +108,21 @@ Logs can be traced using
 $ pm2 logs
 ```
 
+# Scripts
+
+`package.json` has the following commands, you can run them using `npm run <command>`
+
+| Command    | Description                                                                                |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| `test`     | Runs tests via jest                                                                        |
+| `env:dev`  | Sets `NODE_ENV` to `development`. This commands is used by `watch`                         |
+| `env:dev`  | Sets `NODE_ENV` to `production`                                                            |
+| `watch`    | Start a development server via `nodemon` and watches for changes in `src`                  |
+| `lint`     | Lints all files in `src` according to according to rules in [`.eslintrc.js`](.eslintrc.js) |
+| `lint:fix` | Lints and formats all files in `src` according to rules in [`.eslintrc.js`](.eslintrc.js)  |
+| `build`    | Create a production build                                                                  |
+| `prebuild` | Removes old `build` before building                                                        |
+
 # Proxy
 
 You can setup an Nginx proxy like this:
