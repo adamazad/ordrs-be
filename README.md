@@ -76,7 +76,27 @@ This will watch for changes in `src` directory and reload the server.
 
 ## Testing
 
-Test via Jest, run:
+### `.env.test`
+
+Before running tests, you **MUST** create `.env.test` that matches `.env`. Run this
+
+```
+$ cp .env .env.test
+```
+
+or from `.env.sample`
+
+```
+$ cp .env .env.test
+```
+
+And change values. You should have two Firebase projects, one for testing and another for production. Firebase functions are not mocked, and tests use an actual project.
+
+**Why do I need `.env.test`?**
+
+`src/constants/index.ts` is the main oracle for all application variables. It loads either `.env` or `.env.test` depending on current environment.
+
+Now you can run:
 
 ```
 npm test
