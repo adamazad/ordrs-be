@@ -2,7 +2,7 @@
 
 ## Clone
 
-In terminal, run
+In the terminal, run
 
 ```
 $ git clone https://github.com/adamazad/ordrs-be.git
@@ -50,7 +50,7 @@ Create a service account, and download the JSON. It will look like the following
 
 **2. Stringify**
 
-For instance the above JSON, the string version will be (it is compat):
+For instance the above JSON, the string version will be a compact version without all the spaces and linebreaks:
 
 ```
 {"type":"service_account","project_id":"<project-id>","private_key_id":"123456789098765432","private_key":"<private-key>","client_email":"firebase-adminsdk@project.iam.gserviceaccount.com","client_id":"123456788765432345676543","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk%40project.iam.gserviceaccount.com"}
@@ -132,16 +132,16 @@ $ pm2 logs
 
 `package.json` has the following commands, you can run them using `npm run <command>`
 
-| Command    | Description                                                                                |
-| ---------- | ------------------------------------------------------------------------------------------ |
-| `test`     | Runs tests via jest                                                                        |
-| `env:dev`  | Sets `NODE_ENV` to `development`. This commands is used by `watch`                         |
-| `env:dev`  | Sets `NODE_ENV` to `production`                                                            |
-| `watch`    | Start a development server via `nodemon` and watches for changes in `src`                  |
-| `lint`     | Lints all files in `src` according to according to rules in [`.eslintrc.js`](.eslintrc.js) |
-| `lint:fix` | Lints and formats all files in `src` according to rules in [`.eslintrc.js`](.eslintrc.js)  |
-| `build`    | Create a production build                                                                  |
-| `prebuild` | Removes old `build` before building                                                        |
+| Command    | Description                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------- |
+| `test`     | Runs tests via jest                                                                       |
+| `env:dev`  | Sets `NODE_ENV` to `development`. This commands is used by `watch`                        |
+| `env:dev`  | Sets `NODE_ENV` to `production`                                                           |
+| `watch`    | Start a development server via `nodemon` and watches for changes in `src`                 |
+| `lint`     | Lints all files in `src` according to rules in [`.eslintrc.js`](.eslintrc.js)             |
+| `lint:fix` | Lints and formats all files in `src` according to rules in [`.eslintrc.js`](.eslintrc.js) |
+| `build`    | Create a production build                                                                 |
+| `prebuild` | Removes old `build` before building                                                       |
 
 # Proxy
 
