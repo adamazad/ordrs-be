@@ -1,12 +1,20 @@
+/**
+ * Verifies and exports all constants required for the servers to run.
+ * Throws `PreflightError` when any of the required variables are missing.
+ */
 import { config, DotenvConfigOptions } from 'dotenv';
+import { resolve } from 'path';
 
 // Envrionement
-export const NODE_ENV = process.env.NODE_ENV || 'development';
+type NodeEnv = 'production' | 'development' | 'test';
 
+export const NODE_ENV: NodeEnv = (process.env.NODE_ENV as NodeEnv) || 'development';
+
+// Determine which file to read. Default: .env
 const options: DotenvConfigOptions = {};
 
 if (NODE_ENV === 'test') {
-  options.path = './.env.test';
+  options.path = resolve(process.cwd(), '.env.test');
 }
 
 config(options);

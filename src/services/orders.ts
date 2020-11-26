@@ -5,11 +5,18 @@ import { Order } from '@interfaces/Order';
 
 const COLLECTION_NAME = 'orders';
 
+/**
+ * Returns the Firebase reference to the collection
+ */
 export function getCollection() {
   return firestore().collection(COLLECTION_NAME);
 }
 
-export async function createOrder(orderData: Order) {
+/**
+ * Creates and returns a new order document
+ * @param orderId
+ */
+export async function createOrder(orderData: Order): Promise<Order> {
   const id = autoId();
 
   await getCollection()
@@ -21,19 +28,30 @@ export async function createOrder(orderData: Order) {
 
   const docData = await getOrderById(id);
 
-  return docData.data();
+  return docData.data() as Order;
 }
 
+/**
+ * Returns an order reference by Id
+ * @param orderId
+ */
 export function getOrderById(orderId: string) {
   return getCollection().doc(orderId).get();
 }
 
-export async function updateOrderById(orderId: string, orderData: Partial<Order>) {
+/**
+ * Updaates an order document by Id
+ * @param orderId
+ */
+export async function updateOrderById(
+  orderId: string,
+  orderData: Partial<Pick<Order, 'bookingDate' | 'title'>>
+): Promise<Order> {
   await getCollection().doc(orderId).update(orderData);
 
   const docData = await getOrderById(orderId);
 
-  return docData.data();
+  return docData.data() as Order;
 }
 
 /**
