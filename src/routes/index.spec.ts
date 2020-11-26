@@ -1,4 +1,7 @@
+import { autoId } from '@google-cloud/firestore/build/src/util';
 import { Server } from '@hapi/hapi';
+import Faker from 'faker';
+
 import { init } from '../server';
 
 describe('Order Routes', () => {
@@ -6,23 +9,23 @@ describe('Order Routes', () => {
 
   let mockAuth = {
     credentials: {
-      uid: 'mAki6IXiNnhX2RW7vGiWKXr7cxm2',
+      uid: autoId(),
     },
     strategy: 'firebase',
   };
 
   let mockOrder = {
     address: {
-      city: 'Berlin',
-      country: 'Germany',
-      street: 'Wriezener Str. 12',
-      zip: '13055',
+      city: Faker.address.city(),
+      country: Faker.address.country(),
+      street: Faker.address.streetAddress(),
+      zip: Faker.address.zipCode(),
     },
-    bookingDate: 1554284950000,
+    bookingDate: Faker.date.future().getTime(),
     customer: {
-      email: 'test@test.de',
-      name: 'Test User',
-      phone: '015252098067',
+      email: Faker.internet.email(),
+      name: `${Faker.name.firstName()} ${Faker.name.lastName()}`,
+      phone: Faker.phone.phoneNumber(),
     },
     title: 'Test Order 1',
   };
@@ -52,7 +55,7 @@ describe('Order Routes', () => {
   });
 
   describe('PUT /orders', () => {
-    test('Should update order', async () => {
+    test(`Should update order's bookingDate`, async () => {
       // Create new order
       const newOrderRes = await server.inject({
         method: 'POST',
@@ -63,7 +66,33 @@ describe('Order Routes', () => {
 
       const { id } = newOrderRes.result as any;
 
-      // Only title and bookingDate can be updated
+      // Update the title
+      const updatedMockOrder = {
+        bookingDate: Faker.date.future().getTime(),
+      };
+
+      const updatedOrderRes = await server.inject({
+        method: 'PUT',
+        url: `/orders/${id}`,
+        payload: updatedMockOrder,
+        auth: mockAuth,
+      });
+
+      expect(updatedOrderRes.statusCode).toBe(204);
+    });
+
+    test(`Should update order's title`, async () => {
+      // Create new order
+      const newOrderRes = await server.inject({
+        method: 'POST',
+        url: `/orders`,
+        payload: mockOrder,
+        auth: mockAuth,
+      });
+
+      const { id } = newOrderRes.result as any;
+
+      // Update the title
       const updatedMockOrder = {
         title: 'Updated Test',
       };
