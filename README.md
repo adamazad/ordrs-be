@@ -87,14 +87,14 @@ $ cp .env .env.test
 or from `.env.sample`
 
 ```
-$ cp .env .env.test
+$ cp .env.sample .env.test
 ```
 
 And change values. You should have two Firebase projects, one for testing and another for production. Firebase functions are not mocked, and tests use an actual project.
 
 **Why do I need `.env.test`?**
 
-`src/constants/index.ts` is the main oracle for all application variables. It loads either `.env` or `.env.test` depending on current environment.
+`src/constants/index.ts` is the main oracle for all application variables. It loads either `.env` or `.env.test` depending on current environment. It gives you more controll over the test environment variables.
 
 Now you can run:
 
