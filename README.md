@@ -137,3 +137,5 @@ server {
   }
 }
 ```
+
+Make sure to change the port to match the one set in `.env`
