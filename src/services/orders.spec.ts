@@ -84,5 +84,91 @@ describe('Orders Service', () => {
         createdAt: timestamp * 1000,
       });
     });
+
+    test('it should convert handle arrays', () => {
+      // Test fields
+      const createdAt = [
+        new firestore.Timestamp(Math.round(Date.now() / 1000), 0),
+        new firestore.Timestamp(Math.round(Date.now() / 1000), 0),
+        new firestore.Timestamp(Math.round(Date.now() / 1000), 0),
+      ];
+      const emails = [Faker.internet.email(), Faker.internet.email(), Faker.internet.email()];
+      const username = Faker.internet.userName();
+
+      const doc = {
+        username,
+        emails,
+        createdAt,
+      };
+
+      expect(OrdersService.toJSON(doc)).toMatchObject({
+        username,
+        emails,
+        createdAt: createdAt.map(ts => ts.toMillis()),
+      });
+    });
+
+    test('it should convert deep objects', () => {
+      const createdAt = new firestore.Timestamp(Math.round(Date.now() / 1000), 0);
+      const emails = [Faker.internet.email(), Faker.internet.email(), Faker.internet.email()];
+      const username = Faker.internet.userName();
+      // user.photo field
+      const photo = {
+        createdAt,
+        url: Faker.internet.avatar(),
+      };
+
+      // Deep object
+      const articles = [
+        {
+          createdAt,
+          title: Faker.lorem.sentence(),
+          content: Faker.lorem.paragraph(),
+          author: {
+            photo,
+            createdAt,
+            email: Faker.internet.email(),
+          },
+        },
+        {
+          createdAt,
+          title: Faker.lorem.sentence(),
+          content: Faker.lorem.paragraph(),
+          author: {
+            photo,
+            createdAt,
+            email: Faker.internet.email(),
+          },
+        },
+      ];
+
+      const doc = {
+        username,
+        emails,
+        createdAt,
+        articles,
+      };
+
+      const expectedDoc = {
+        username,
+        emails,
+        // Manually convert all FirebaseFirestore.Timestamp to miliseconds
+        articles: articles.map(article => ({
+          ...article,
+          createdAt: article.createdAt.toMillis(),
+          author: {
+            ...article.author,
+            createdAt: article.author.createdAt.toMillis(),
+            photo: {
+              ...article.author.photo,
+              createdAt: article.author.photo.createdAt.toMillis(),
+            },
+          },
+        })),
+        createdAt: createdAt.toMillis(),
+      };
+
+      expect(OrdersService.toJSON(doc)).toMatchObject(expectedDoc);
+    });
   });
 });
