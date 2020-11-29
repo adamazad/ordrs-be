@@ -72,27 +72,36 @@ export async function updateOrderById(
  * @param data
  */
 export function toJSON(data?: firestore.DocumentData): Object {
+  // Base case
+  // Convert Timestamp to miliseconds
+  // Return the primitive type
+  const isPrimitive = isValuePrimitive(data);
+  if (data instanceof firestore.Timestamp) {
+    return data.toMillis();
+  } else if (isPrimitive) {
+    return data as any;
+  }
+
+  // Arrays are mapped
+  if (Array.isArray(data)) {
+    return data.map(toJSON);
+  }
+
+  // Object values are mapped
   const DocJSON = {};
 
   for (let propName in data) {
     const propValue = data[propName];
-
-    const isPrimitive = isValuePrimitive(propValue);
-    // Convert Timestamp to miliseconds
-    if (propValue instanceof firestore.Timestamp) {
-      DocJSON[propName] = propValue.toMillis();
-    } else if (isPrimitive) {
-      DocJSON[propName] = propValue;
-    }
-    // Complex types
-    else if (typeof propValue === 'object') {
-      DocJSON[propName] = toJSON(propValue);
-    }
+    DocJSON[propName] = toJSON(propValue);
   }
 
   return DocJSON;
 }
 
+/**
+ * Checks if a value it primitive
+ * @param {any} val
+ */
 function isValuePrimitive(val: any) {
   return ['string', 'number', 'boolean', 'bigint'].includes(typeof val) || val === null;
 }
