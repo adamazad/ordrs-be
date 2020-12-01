@@ -71,7 +71,7 @@ describe('Orders Service', () => {
   });
 
   describe('toJSON', () => {
-    test('it should convert firestore.Timestamp type to miliseconds', () => {
+    test('It should convert firestore.Timestamp type to miliseconds', () => {
       const timestamp = Math.round(Date.now() / 1000);
 
       const doc = {
@@ -85,7 +85,7 @@ describe('Orders Service', () => {
       });
     });
 
-    test('it should convert handle arrays', () => {
+    test('It should handle arrays', () => {
       // Test fields
       const createdAt = [
         new firestore.Timestamp(Math.round(Date.now() / 1000), 0),
@@ -108,7 +108,7 @@ describe('Orders Service', () => {
       });
     });
 
-    test('it should convert deep objects', () => {
+    test('It should handle deep objects', () => {
       const createdAt = new firestore.Timestamp(Math.round(Date.now() / 1000), 0);
       const emails = [Faker.internet.email(), Faker.internet.email(), Faker.internet.email()];
       const username = Faker.internet.userName();
