@@ -36,6 +36,7 @@
     "dotenv": "^8.2.0",
     "faker": "^5.1.0",
     "firebase-admin": "^9.4.1",
+    "generatorics": "^1.1.0",
     "hapi-auth-bearer-token": "^8.0.0",
     "hapi-rate-limit": "^5.0.0",
     "joi": "^17.3.0",

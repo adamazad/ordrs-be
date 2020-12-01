@@ -1,5 +1,6 @@
 import { autoId } from '@google-cloud/firestore/build/src/util';
 import { Server } from '@hapi/hapi';
+import G from 'generatorics';
 import Faker from 'faker';
 
 import { init } from '../server';
@@ -39,7 +40,31 @@ describe('Order Routes', () => {
   });
 
   describe('POST /orders', () => {
-    test('Should create a new order', async () => {
+    test('It should return 401 without props authentication', async () => {
+      const { statusCode } = await server.inject({
+        method: 'POST',
+        url: '/orders',
+      });
+      expect(statusCode).toBe(401);
+    });
+
+    describe('payload', () => {
+      const payloadKeys = Object.keys(mockOrder);
+      // Generate all possible powerets
+      for (const payload of G.combination(payloadKeys, 3)) {
+        test(`It should fail with payload having only ${payload.join(', ')}`, async () => {
+          const { statusCode } = await server.inject({
+            method: 'POST',
+            url: '/orders',
+            auth: mockAuth,
+            payload,
+          });
+          expect(statusCode).toBe(400);
+        });
+      }
+    });
+
+    test('It should create a new order with correct payload', async () => {
       const res = await server.inject({
         method: 'POST',
         url: '/orders',
@@ -55,7 +80,30 @@ describe('Order Routes', () => {
   });
 
   describe('PUT /orders', () => {
-    test(`Should update order's bookingDate`, async () => {
+    test('It should return 401 without props authentication', async () => {
+      const res = await server.inject({
+        method: 'PUT',
+        url: `/orders/${autoId()}`, // arbitrary order Id
+      });
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    test('It should fail to update nonexsiting orders', async () => {
+      const { statusCode, result } = await server.inject({
+        method: 'PUT',
+        url: `/orders/${autoId()}`, // arbitrary order Id
+        auth: mockAuth,
+        payload: {
+          bookingDate: Faker.date.future().getTime(),
+        },
+      });
+
+      expect(statusCode).toBe(400);
+      expect((result as any).message).toContain('NOT_FOUND');
+    });
+
+    test(`It should update order's bookingDate`, async () => {
       // Create new order
       const newOrderRes = await server.inject({
         method: 'POST',
@@ -81,7 +129,7 @@ describe('Order Routes', () => {
       expect(updatedOrderRes.statusCode).toBe(204);
     });
 
-    test(`Should update order's title`, async () => {
+    test(`It should update order's title`, async () => {
       // Create new order
       const newOrderRes = await server.inject({
         method: 'POST',
