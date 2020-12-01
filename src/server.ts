@@ -15,7 +15,6 @@ const server = Hapi.server({
   },
   routes: {
     cors: true,
-    auth: 'firebase',
     validate: {
       failAction: async (request, h, err) => {
         if (NODE_ENV === 'production') {
@@ -24,7 +23,9 @@ const server = Hapi.server({
           throw Boom.badRequest(`Invalid request payload input`);
         } else {
           // During development, log and respond with the full error.
-          console.error(err);
+          if (NODE_ENV === 'development') {
+            console.error(err);
+          }
           throw err;
         }
       },
@@ -39,8 +40,7 @@ export async function init() {
   // Firebase auth strategy
   await server.register(require('./plugins/auth').default);
 
-  // Rate-limit
-  // Only in production
+  // Rate-limit in production
   if (NODE_ENV === 'production') {
     await server.register({
       plugin: require('hapi-rate-limit').default,
