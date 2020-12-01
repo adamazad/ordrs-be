@@ -59,7 +59,6 @@ describe('Order Routes', () => {
             auth: mockAuth,
             payload,
           });
-          console.log({ statusCode });
           expect(statusCode).toBe(400);
         });
       }
