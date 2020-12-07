@@ -26,6 +26,14 @@ describe('Orders Service', () => {
     uid: autoId(),
   };
 
+  afterAll(async () => {
+    // Clean up
+    const batch = firestore().batch();
+    const docs = await firestore().collection('orders').listDocuments();
+    docs.forEach(doc => batch.delete(doc));
+    await batch.commit();
+  });
+
   describe('getCollection', () => {
     test('It should be a Firestore Collection ref', () => {
       expect(OrdersService.getCollection()).toBeInstanceOf(firestore.CollectionReference);
@@ -57,7 +65,6 @@ describe('Orders Service', () => {
       expect(createdOrder.bookingDate).toEqual(mockOrder.bookingDate);
 
       // Update the order
-
       const updatePayload = {
         bookingDate: Faker.date.future().getTime(),
       };

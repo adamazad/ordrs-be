@@ -1,4 +1,5 @@
 import { autoId } from '@google-cloud/firestore/build/src/util';
+import { firestore } from 'firebase-admin';
 import { Server } from '@hapi/hapi';
 import G from 'generatorics';
 import Faker from 'faker';
@@ -37,6 +38,11 @@ describe('Order Routes', () => {
 
   afterAll(async () => {
     await server.stop();
+
+    const batch = firestore().batch();
+    const docs = await firestore().collection('orders').listDocuments();
+    docs.forEach(doc => batch.delete(doc));
+    await batch.commit();
   });
 
   describe('POST /orders', () => {
